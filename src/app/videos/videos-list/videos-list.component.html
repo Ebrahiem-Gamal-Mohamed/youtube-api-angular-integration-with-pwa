@@ -1,1 +1,39 @@
-<p>videos-list works!</p>
+<div class="videos-wrapper">
+  <div class="container">
+    <nz-table
+      #videosTable
+      [nzData]="videos$ | async"
+      nzTableLayout="fixed"
+      [nzFrontPagination]="false"
+      [nzLoading]="loading"
+      [nzTotal]="totalCount"
+      [nzPageSize]="maxResultsPerPage"
+      [nzPageIndex]="pageIndex"
+    >
+      <thead>
+        <tr>
+          <th
+            *ngFor="let column of columns"
+            [nzSortOrder]="column.sortOrder"
+            [nzSortFn]="column.sortFn"
+            [nzSortDirections]="column.sortDirections"
+          >
+            {{ column?.name }}
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let video of videosTable.data">
+          <td>
+            <img [src]="video?.defaultThumb" [alt]="video?.title" />
+          </td>
+          <td>{{ video?.title }}</td>
+          <td>{{ video?.publishedDate | date: "shortDate" }}</td>
+          <td>
+            <button nz-button nzType="primary" [routerLink]="['videos/', video?.id]"></button>
+          </td>
+        </tr>
+      </tbody>
+    </nz-table>
+  </div>
+</div>
