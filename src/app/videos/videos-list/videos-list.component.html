@@ -46,7 +46,7 @@
           <td>{{ video?.title }}</td>
           <td>{{ video?.publishedDate | date: "shortDate" }}</td>
           <td>
-            <button nz-button nzType="default" [routerLink]="['videos', video?.id]">Details</button>
+            <button nz-button nzType="default" [routerLink]="['/videos/', video?.id]">Details</button>
           </td>
         </tr>
       </tbody>
