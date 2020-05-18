@@ -18,6 +18,7 @@ export interface RetrievedVideoData {
 })
 export class VideoService {
   favorites: Video [] = [];
+  ratedVideosList: Video[] = [];
   constructor(private youtubeService: YoutubeService) { }
 
   getVideosList(
@@ -57,14 +58,14 @@ export class VideoService {
     return this.youtubeService.getVideo(id).pipe(
       map((data: any) => {
         return {
-          id: data[0].id,
-          title: data[0].snippet.title,
-          description: data[0].snippet.description,
-          defaultThumb: data[0].snippet.thumbnails.maxres.url,
-          publishedDate: data[0].snippet.publishedAt,
-          likeCount: data[0].statistics.likeCount,
-          viewsCount: data[0].statistics.viewCount,
-          duration: data[0].contentDetails.duration,
+          id: data.items[0].id,
+          title: data.items[0].snippet.title,
+          description: data.items[0].snippet.description,
+          defaultThumb: data.items[0].snippet.thumbnails.maxres.url,
+          publishedDate: data.items[0].snippet.publishedAt,
+          likeCount: data.items[0].statistics.likeCount,
+          viewsCount: data.items[0].statistics.viewCount,
+          duration: data.items[0].contentDetails.duration,
           rate: 0,
         } as Video;
       }),

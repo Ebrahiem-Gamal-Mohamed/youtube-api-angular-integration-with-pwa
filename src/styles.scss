@@ -1,7 +1,28 @@
 /* You can add global styles to this file, and also import other style files */
+@import "./variables";
 
 body {
-    background-color: #f7f7f7;
+    background-color: $main-bg;
+    font-size: 15px;
+}
+
+.video-details-wrapper {
+    padding: 40px 0px;
+    .details-container {
+        margin: 0 40px;
+        padding: 20px 0px;
+        box-shadow: $main-box-shadow;
+        background-color: $white;
+
+        .views, .likes {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            i {
+                font-size: 18px;
+            }
+        }
+    }
 }
 
 .videos-wrapper {
@@ -9,12 +30,16 @@ body {
 
     .ant-table {
         table {
-            box-shadow: 0 0 20px 5px rgba(0, 0, 0, 0.05);
+            box-shadow: $main-box-shadow;
         }
     }
 }
 
-.ant-input-prefex {
+.ant-input-prefix {
     line-height: 17px;
     font-size: 17px;
+}
+
+.ant-rate {
+    color: $main-color !important;
 }

@@ -1,8 +1,8 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, OnDestroy } from "@angular/core";
 import { Video } from "./../video.model";
 import { VideoService } from "./../video.service";
-import { Observable, of } from "rxjs";
-import { map, debounceTime, tap, catchError } from "rxjs/operators";
+import { Observable, of, Subject } from "rxjs";
+import { map, debounceTime, tap, catchError, takeUntil } from "rxjs/operators";
 import {
   NzTableSortOrder,
   NzTableSortFn,
@@ -34,8 +34,9 @@ export enum SortFields {
   templateUrl: "./videos-list.component.html",
   styleUrls: ["./videos-list.component.scss"],
 })
-export class VideosListComponent implements OnInit {
+export class VideosListComponent implements OnInit, OnDestroy {
   videos$: Observable<Video[]>;
+  componentDestoyed$: Subject<Boolean> = new Subject<boolean>();
   columns: ColumnItem[] = [];
   filter: FormControl = new FormControl('');
   
@@ -84,7 +85,10 @@ export class VideosListComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.filter.valueChanges.subscribe(searchTerm => {
+    this.filter.valueChanges.pipe(
+      takeUntil(this.componentDestoyed$),
+      debounceTime(500)
+    ).subscribe(searchTerm => {
       this.searchText = searchTerm;
       this.getVideosData();
     });
@@ -132,6 +136,11 @@ export class VideosListComponent implements OnInit {
         return of([]);
       })
     );
+  }
+
+  ngOnDestroy(): void {
+    this.componentDestoyed$.next(null);
+    this.componentDestoyed$.complete();
   }
 
 }
