@@ -6,9 +6,10 @@ import { VideosRoutingModule } from "./videos-routing.module";
 import { VideosListComponent } from "./videos-list/videos-list.component";
 import { VideoDetailsComponent } from "./video-details/video-details.component";
 import { SharedNzmodulesModule } from "../shared/_modules/shared-nzmodules.module";
+import { ParseDurationPipe } from './../core/_pipes/parse-duration.pipe';
 
 @NgModule({
-  declarations: [VideosListComponent, VideoDetailsComponent],
+  declarations: [VideosListComponent, VideoDetailsComponent, ParseDurationPipe],
   imports: [
     CommonModule,
     VideosRoutingModule,
@@ -21,6 +22,7 @@ import { SharedNzmodulesModule } from "../shared/_modules/shared-nzmodules.modul
     VideoDetailsComponent,
     FormsModule,
     ReactiveFormsModule,
+    ParseDurationPipe
   ],
 })
 export class VideosModule {}

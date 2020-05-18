@@ -1,1 +1,50 @@
-<p>video-details works!</p>
+<div class="video-details-wrapper">
+    <div *ngIf="video$ | async as video">
+        <div class="img-container">
+            <img class="w-100" [src]="video?.defaultThumb" [alt]="video?.title" />
+        </div>
+        <div class="container">
+            <div class="d-flex align-items-center">
+                <h3 class="mr-auto">{{video?.title}}</h3>
+                <ng-container *ngIf="!video?.isFavorite">
+                    <button type="button" nz-button nz-type="danger" (click)="addToFavorites(video)">Add to favorites</button>
+                </ng-container>
+                <ng-container *ngIf="video?.isFavorite">
+                    <button type="button" nz-button nz-type="defalut" (click)="removeFromFavorites(video)">Remove From favorites</button>
+                </ng-container>
+            </div>
+            <nz-divider></nz-divider>
+            <div class="d-flex align-items-center justify-content-between">
+                <div class="rate">
+                    <strong>Rate Now </strong>
+                    <nz-rate [ngModel]="video?.rate"></nz-rate>
+                </div>
+                <div class="duration">
+                    <strong>Duration: </strong>
+                    <span>{{ video?.duration | parseDuration }}</span>
+                </div>
+                <div class="statistics">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div class="views">
+                            <strong>
+                                <i nz-icon nzType="eye" nzTheme="fill"></i>
+                                <span>{{ video?.viewsCount }}</span>
+                            </strong>
+                        </div>
+                        <div class="likes">
+                            <strong>
+                                <i nz-icon nzType="like" nzTheme="fill"></i>
+                                <span>{{ video?.likeCount }}</span>
+                            </strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <nz-divider></nz-divider>
+            <div class="description">
+                <p class="text-danger">{{ video?.publishedDate | date:"longDate" }}</p>
+                <p>{{ video?.description }}</p>
+            </div>
+        </div>
+    </div>
+</div>
