@@ -109,7 +109,7 @@ export class VideosListComponent implements OnInit, OnDestroy {
         this.pageTokenValue = "";
       }
     }
-    if (this.pageTokens.length >= pageIndex) {
+    if (this.pageTokens.length > pageIndex) {
       this.pageTokenValue = this.pageTokens[pageIndex].prev
         ? this.pageTokens[pageIndex].prev
         : "";
