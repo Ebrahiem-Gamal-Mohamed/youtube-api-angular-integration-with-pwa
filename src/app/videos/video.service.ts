@@ -3,6 +3,7 @@ import { Observable, throwError } from "rxjs";
 import { map, catchError } from "rxjs/operators";
 import { Video } from './video.model';
 import { YoutubeService } from "./../core/_services/youtube.service";
+import { FormControl } from '@angular/forms';
 
 export interface RetrievedVideoData {
   videos: Video[];
@@ -19,6 +20,7 @@ export interface RetrievedVideoData {
 export class VideoService {
   favorites: Video [] = [];
   ratedVideosList: Video[] = [];
+  filter = new FormControl('');
   constructor(private youtubeService: YoutubeService) { }
 
   getVideosList(

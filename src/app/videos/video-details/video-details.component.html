@@ -12,10 +12,10 @@
             <div class="d-flex align-items-center justify-content-between">
                 <h5 class="m-0">{{video?.title}}</h5>
                 <ng-container *ngIf="!video?.isFavorite">
-                    <button type="button" nz-button nz-type="primary" nzDanger (click)="addToFavorites(video);video.isFavorite = !video.isFavorite">Add to favorites</button>
+                    <button nz-button nz-type="primary" nzDanger (click)="addToFavorites(video);video.isFavorite = !video.isFavorite">Add to favorites</button>
                 </ng-container>
                 <ng-container *ngIf="video?.isFavorite">
-                    <button type="button" nz-button nz-type="default" (click)="removeFromFavorites(video);video.isFavorite = !video.isFavorite">Remove From favorites</button>
+                    <button nz-button nz-type="default" (click)="removeFromFavorites(video);video.isFavorite = !video.isFavorite">Remove From favorites</button>
                 </ng-container>
             </div>
             <nz-divider></nz-divider>
@@ -46,7 +46,7 @@
             </div>
             <nz-divider></nz-divider>
             <div class="description">
-                <p class="text-danger"><strong>Published At </strong>{{ video?.publishedDate | date:"longDate" }}</p>
+                <p class="text-danger"><strong>Published On {{ video?.publishedDate | date:"longDate" }}</strong></p>
                 <p>{{ video?.description }}</p>
             </div>
         </div>

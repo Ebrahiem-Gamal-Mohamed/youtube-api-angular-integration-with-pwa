@@ -21,6 +21,7 @@ export class VideoDetailsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.videoService.filter.disable();
     this.videoService.favorites = this.browserService.getLocal('favList') ? this.browserService.getLocal('favList') : [];
     this.videoService.ratedVideosList = this.browserService.getLocal('ratedList') ? this.browserService.getLocal('ratedList'): [];
     let videoId: string;

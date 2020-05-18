@@ -1,16 +1,5 @@
 <div class="videos-wrapper">
   <div class="container">
-    <div class="d-flex mb-3 align-items-center">
-      <h4>My Video Bus</h4>
-      <div class="ml-auto">
-        <nz-input-group [nzPrefix]="iconSearch">
-          <input [formControl]="filter" type="text" nz-input placeholder="Search By Title" />
-        </nz-input-group>
-        <ng-template #iconSearch>
-          <i nz-icon nzType="search"></i>
-        </ng-template>
-      </div>
-    </div>
     <div *ngIf="errorMessage" class="alert alert-danger">
       <p>{{ errorMessage }}</p>
     </div>
@@ -18,6 +7,7 @@
       #videosTable
       [nzData]="videos$ | async"
       [nzFrontPagination]="false"
+      [nzPaginationPosition]="'both'"
       [nzLoading]="loading"
       [nzTotal]="totalCount"
       [nzPageSize]="maxResultsPerPage"

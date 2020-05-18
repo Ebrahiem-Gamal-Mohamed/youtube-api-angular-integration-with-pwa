@@ -6,8 +6,30 @@ body {
     font-size: 15px;
 }
 
+.header {
+    padding: 20px 0px;
+    background-color: $light-gray;
+    box-shadow: 0px 1px 20px 0px rgba(0, 0, 0, 0.25);
+    position: fixed;
+    top: 0px;
+    width: 100%;
+    z-index: 9999;
+
+    h4 {
+        color: $main-color;
+        margin: 0;
+        cursor: pointer;
+    }
+    .search-box {
+        width: 25%;
+        .ant-input-affix-wrapper {
+            border-radius: 25px;
+        }
+    }
+}
+
 .video-details-wrapper {
-    padding: 40px 0px;
+    padding: 110px 0px 50px;
     .details-container {
         margin: 0 40px;
         padding: 20px 0px;
@@ -26,12 +48,17 @@ body {
 }
 
 .videos-wrapper {
-    padding: 40px 0px;
+    padding: 90px 0px 50px;
 
     .ant-table {
         table {
             box-shadow: $main-box-shadow;
         }
+    }
+
+    .ant-pagination-simple .ant-pagination-next,
+    .ant-pagination-simple .ant-pagination-prev {
+        line-height: 19px !important;
     }
 }
 
