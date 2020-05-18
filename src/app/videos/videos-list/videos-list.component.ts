@@ -1,17 +1,19 @@
 import { Component, OnInit } from "@angular/core";
-import { YoutubeService } from "src/app/core/_services/youtube.service";
-import { Video } from "../video.model";
-import { Observable } from "rxjs";
-import { map, debounceTime, tap } from "rxjs/operators";
+import { Video } from "./../video.model";
+import { VideoService } from "./../video.service";
+import { Observable, of } from "rxjs";
+import { map, debounceTime, tap, catchError } from "rxjs/operators";
 import {
   NzTableSortOrder,
   NzTableSortFn,
   NzTableFilterFn,
   NzTableFilterList,
 } from "ng-zorro-antd";
+import { FormControl } from '@angular/forms';
 
 interface ColumnItem {
   name: string;
+  key: string;
   placeholder: string;
   sortOrder?: NzTableSortOrder;
   sortFn?: NzTableSortFn;
@@ -21,6 +23,12 @@ interface ColumnItem {
   sortDirections?: NzTableSortOrder[];
 }
 
+export enum SortFields {
+  Title = 'title',
+  PublishedDate = 'date',
+  ViewCount = 'viewCount'
+}
+
 @Component({
   selector: "app-videos-list",
   templateUrl: "./videos-list.component.html",
@@ -28,29 +36,40 @@ interface ColumnItem {
 })
 export class VideosListComponent implements OnInit {
   videos$: Observable<Video[]>;
-  channelId: string = "UCiP6wD_tYlYLYh3agzbByWQ";
-  maxResultsPerPage: number = 10;
-  pageIndex: number = 1;
   columns: ColumnItem[] = [];
-  loading: boolean = false;
+  filter: FormControl = new FormControl('');
+  
+  errorMessage: string;
+  channelId: string;
+  maxResultsPerPage: number;
+  pageTokens: {next: string, prev: string}[] = [];
+  pageTokenValue: string;
+  pageIndex: number;
   totalCount: number;
+  searchText: string;
+  sortField: string;
+  loading: boolean = false;
 
-  constructor(private youtubeService: YoutubeService) {}
-
-  ngOnInit(): void {
+  constructor(private videoService: VideoService) {
+    this.channelId = "UCiP6wD_tYlYLYh3agzbByWQ";
+    this.maxResultsPerPage = 10;
+    this.pageIndex = 1;
     this.columns = [
       {
         name: "",
+        key: "",
         placeholder: "Video Thumb Image"
       },
       {
         name: "Title",
+        key: SortFields.Title,
         placeholder: "Video Title",
         sortOrder: null,
         sortFn: (a: Video, b: Video) => a.title.localeCompare(b.title)
       },
       {
         name: "Published Date",
+        key: SortFields.PublishedDate,
         placeholder: "Video Published Date",
         sortOrder: null,
         sortFn: (a: Video, b: Video) =>
@@ -58,28 +77,61 @@ export class VideosListComponent implements OnInit {
       },
       {
         name: "",
+        key: "",
         placeholder: "Controls"
       },
     ];
-
-    this.getVideos();
   }
 
-  trackByName(_: number, item: ColumnItem): string {
-    return item.name;
+  ngOnInit(): void {
+    this.filter.valueChanges.subscribe(searchTerm => {
+      this.searchText = searchTerm;
+      this.getVideosData();
+    });
   }
 
-  getVideos() {
-    this.loading = true;
-    this.videos$ = this.youtubeService
-      .getVideos(this.channelId, this.maxResultsPerPage)
-      .pipe(
-        debounceTime(500),
-        tap((data: any) => {
-          this.loading = false;
-          this.totalCount = data.count
-        }),
-        map((data: any) => data.videos),
-      );
+  onQueryParamsChange(params) {
+    const { pageIndex, pageSize, sort, filter } = params;
+    const currentSort = sort.find(item => item.value !== null);
+    const sortOrder = (currentSort && currentSort.value) || '';
+    this.sortField = (currentSort && currentSort.key) || '';
+    this.maxResultsPerPage = pageSize;
+    if (this.sortField) {
+      this.searchText = '';
+    }
+    if (this.pageTokens.length === 1) {
+      this.pageTokenValue = '';
+    } else if (this.pageTokens[pageIndex-1] && this.pageTokens.length >= pageIndex-1) {
+      this.pageTokenValue = this.pageTokens[pageIndex-1].prev ? this.pageTokens[pageIndex-1].prev : '';
+    }
+    this.getVideosData();
   }
+
+  private getVideosData() {
+    this.videos$ = this.videoService.getVideosList(
+      this.channelId,
+      this.maxResultsPerPage,
+      this.sortField,
+      this.pageTokenValue,
+      this.searchText
+    ).pipe(
+      tap(() => this.loading = true),
+      debounceTime(500),
+      tap((data: any) => {
+        this.loading = false;
+        this.totalCount = data.count;
+        this.pageTokenValue = data.pageToken.next;
+        if (!this.pageTokens.some(page => page.next === this.pageTokenValue)) {
+          this.pageTokens.push(data.pageToken);
+        }
+        console.log(this.pageTokens, this.pageTokenValue);
+      }),
+      map((data: any) => data.videos),
+      catchError(err => {
+        this.errorMessage = err;
+        return of([]);
+      })
+    );
+  }
+
 }

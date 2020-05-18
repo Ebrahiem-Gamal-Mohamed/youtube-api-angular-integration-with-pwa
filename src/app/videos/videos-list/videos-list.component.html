@@ -1,19 +1,35 @@
 <div class="videos-wrapper">
   <div class="container">
+    <div class="d-flex mb-3 align-items-center">
+      <h4>My Video Bus</h4>
+      <div class="ml-auto">
+        <nz-input-group [nzPrefix]="iconSearch">
+          <input [formControl]="filter" type="text" nz-input placeholder="Search By Title" />
+        </nz-input-group>
+        <ng-template #iconSearch>
+          <i nz-icon nzType="search"></i>
+        </ng-template>
+      </div>
+    </div>
+    <div *ngIf="errorMessage" class="alert alert-danger">
+      <p>{{ errorMessage }}</p>
+    </div>
     <nz-table
       #videosTable
       [nzData]="videos$ | async"
-      nzTableLayout="fixed"
       [nzFrontPagination]="false"
       [nzLoading]="loading"
       [nzTotal]="totalCount"
       [nzPageSize]="maxResultsPerPage"
       [nzPageIndex]="pageIndex"
+      [nzSimple]="true"
+      (nzQueryParams)="onQueryParamsChange($event)"
     >
       <thead>
         <tr>
           <th
             *ngFor="let column of columns"
+            [nzColumnKey]="column.key"
             [nzSortOrder]="column.sortOrder"
             [nzSortFn]="column.sortFn"
             [nzSortDirections]="column.sortDirections"
@@ -30,7 +46,7 @@
           <td>{{ video?.title }}</td>
           <td>{{ video?.publishedDate | date: "shortDate" }}</td>
           <td>
-            <button nz-button nzType="primary" [routerLink]="['videos/', video?.id]"></button>
+            <button nz-button nzType="default" [routerLink]="['videos', video?.id]">Details</button>
           </td>
         </tr>
       </tbody>

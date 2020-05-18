@@ -3,7 +3,6 @@ import { NgModule } from "@angular/core";
 
 import { AppRoutingModule } from "./app-routing.module";
 import { HttpClientModule } from '@angular/common/http';
-import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 
 // components...
 import { AppComponent } from "./app.component";
@@ -23,8 +22,6 @@ import { NZ_I18N, en_US } from "ng-zorro-antd/i18n";
   imports: [
     BrowserModule,
     HttpClientModule,
-    FormsModule,
-    ReactiveFormsModule,
     AppRoutingModule,
     ServiceWorkerModule.register("ngsw-worker.js", {
       enabled: environment.production,
