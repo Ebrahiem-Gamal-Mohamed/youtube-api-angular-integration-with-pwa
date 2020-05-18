@@ -2,7 +2,7 @@ import { BrowserModule } from "@angular/platform-browser";
 import { NgModule } from "@angular/core";
 
 import { AppRoutingModule } from "./app-routing.module";
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from "@angular/common/http";
 
 // components...
 import { AppComponent } from "./app.component";
@@ -16,6 +16,7 @@ import en from "@angular/common/locales/en";
 registerLocaleData(en);
 /** config ng-zorro-antd i18n **/
 import { NZ_I18N, en_US } from "ng-zorro-antd/i18n";
+import { CachingInterceptor } from './core/_services/cache/caching-interceptor.service';
 
 @NgModule({
   declarations: [AppComponent, HomeComponent],
@@ -25,9 +26,12 @@ import { NZ_I18N, en_US } from "ng-zorro-antd/i18n";
     AppRoutingModule,
     ServiceWorkerModule.register("ngsw-worker.js", {
       enabled: environment.production,
-    })
+    }),
   ],
-  providers: [{ provide: NZ_I18N, useValue: en_US }],
+  providers: [
+    { provide: NZ_I18N, useValue: en_US },
+    { provide: HTTP_INTERCEPTORS, useClass: CachingInterceptor, multi: true },
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
